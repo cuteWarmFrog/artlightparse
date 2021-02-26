@@ -1,0 +1,28 @@
+{
+  "name": "gromova",
+  "version": "1.0.0",
+  "description": "omg my first cash",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Livshits",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.24",
+    "@types/node-fetch": "^2.5.8",
+    "@types/selenium-webdriver": "^4.0.11",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.5",
+    "chromedriver": "^88.0.0",
+    "node-fetch": "^2.6.1",
+    "selenium-webdriver": "^4.0.0-beta.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.31"
+  }
+}
