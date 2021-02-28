@@ -2,6 +2,7 @@ import {WebElement} from "selenium-webdriver";
 import {Parser} from "./Parser/Parser";
 import {Downloader} from "./Downloader/Downloader";
 import {HtmlReader} from "./HtmlReader/HtmlReader";
+import {ItemProcessor} from "./ItemProcessor/ItemProcessor";
 
 const fs = require('fs');
 
@@ -11,6 +12,7 @@ const categoriesSelector = '.wrap-cell-sidebar:first-child li a.a-big-drop';
 const paginationSelector = '.wrap-pagination a';
 const lastItemCardSelector = '.wrap-card-item-goods:last-child';
 const itemLinkSelector = '.wrap-card-item-goods a';
+const sliderCardSelector = '.slider-card-product';
 
 const url = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_1712/';
 
@@ -20,32 +22,37 @@ const urlsToAvoid = [
    'https://artlight.ru/catalog/kompleksnye_sistemy_bezopasnosti/'];
 
 (async function MainWrapper() {
+   const htmlReader = new HtmlReader();
+   const parser = new Parser();
+   const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_1013/';
+   const itemUrlWithoutMore = 'https://artlight.ru/catalog/trekovye_svetilniki/art_focus66/';
 
+   const itemHtml = await htmlReader.getItemHtmlFromBrowser(itemUrlWithMore, sliderCardSelector);
+   const distinctItems =  parser.getItemSpecs(itemHtml);
+
+
+
+})();
+
+async function makeSomeMagic() {
    const downloader = new Downloader();
    const htmlReader = new HtmlReader();
    const parser = new Parser();
-   //
-   // const catalogHtml = await htmlReader.getHtmlFromBrowser(catalogUrl, categoriesSelector);
-   // const categoriesUrls = parser.getUrlsFromHtmlWithSelector(catalogHtml, categoriesSelector);
-   // const allPageUrls = await getAllPageUrls(categoriesUrls, htmlReader, parser);
-   // const allItemsUrls = await getAllItemsUrls(allPageUrls, htmlReader, parser);
-   //
-   // allItemsUrls.map((url: string, i:number) => {
-   //    console.log(`${i}: ${url}`);
-   // })
 
-   //todo MAY BEE NO PAGINATION
-   const html = await htmlReader.getHtmlFromBrowser(
-      'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_inline107/'
-   ,'.wrap-big-img img');
-   const urLsForDownload = parser.getResourcesUrls(html);
+   const catalogHtml = await htmlReader.getHtmlFromBrowser(catalogUrl, categoriesSelector);
+   const categoriesUrls = parser.getUrlsFromHtmlWithSelector(catalogHtml, categoriesSelector);
+   const allPageUrls = await getAllPageUrls(categoriesUrls, htmlReader, parser);
+   const allItemsUrls = await getAllItemsUrls(allPageUrls, htmlReader, parser);
 
-   for (const url of urLsForDownload) {
-      console.log(url);
-      await downloader.download(url);
+   const itemProcessor = new ItemProcessor();
+
+   for(let itemUrl of allItemsUrls) {
+      console.log(`${url}`);
+
+      let itemHtml = await htmlReader.getHtmlFromBrowser(url, sliderCardSelector);
+      itemProcessor.processItem(itemHtml);
    }
-
-})();
+}
 
 async function getAllPageUrls(categoriesUrls: string[], htmlReader: HtmlReader, parser: Parser): Promise<string[]> {
    const allPageUrls: string[] = [];
