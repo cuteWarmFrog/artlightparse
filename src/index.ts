@@ -22,6 +22,7 @@ const urlsToAvoid = [
    'https://artlight.ru/catalog/kompleksnye_sistemy_bezopasnosti/'];
 
 (async function MainWrapper() {
+   console.log('VITYA IS BACK')
    const htmlReader = new HtmlReader();
    const parser = new Parser();
    const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_1013/';
