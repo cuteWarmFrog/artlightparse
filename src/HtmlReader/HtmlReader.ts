@@ -30,8 +30,10 @@ export class HtmlReader {
       try {
          while(true) {
             await this.findShowMore();
-            for(let i = 0; i < 1500; i++) {
-               console.log(i + ' Бог, прости мне этот кусок кода.');
+
+            for(let i = 0; i < 20000; i++) {
+               console.clear();
+               console.log(`${i} ⊃｡•́‿•̀｡)⊃ я жму "показать больше"`);
             }
          }
 
