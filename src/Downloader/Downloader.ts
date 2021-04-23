@@ -16,12 +16,11 @@ export class Downloader {
    }
 
    pickAName(url: string): string {
-      const regex = /ART.*(jpeg|7z)/;
-      return (url.match(regex) || [])[0];
+      let parts = url.split('/');
+      return parts[parts.length - 1];
    }
 
    generatePath(url: string): any {
-      console.log(this.pickAName(url));
-      return Path.resolve(__dirname, '../../files', this.pickAName(url));
+      return Path.resolve(__dirname, '../../content/photos', this.pickAName(url));
    }
 }
