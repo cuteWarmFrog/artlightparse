@@ -41,8 +41,8 @@ export class Parser {
         return Array.from(unique);
     }
 
-    getDistinctItems(html: string) {
-        const distinctItems: any = [];
+    getDistinctItems(html: string, url: string) {
+        let distinctItems: any = [];
 
         const Specs: string[] = [];
         const prices: number[] = [];
@@ -63,6 +63,15 @@ export class Parser {
                 price: prices[i]
             })
         }
+
+        // distinctItems = Array.from(new Set(distinctItems.map((item: any) => item.specs)))
+        //     .map((specs: any) => {
+        //         return {
+        //             specs: specs,
+        //             price: distinctItems.find((item: any) => item.specs === specs).price
+        //         }
+        //     })
+
         let commonSpecs = this.getCommonSpecs(html);
         let specsPool = this.getSpecificSpecsPool(html);
 
@@ -74,7 +83,7 @@ export class Parser {
             let itemSpecs = parts[1].split(',').map((el: any) => el.trim().replace(')', ''));
 
             let finalItem = {
-                'Имя': itemName,
+                'Наименование': itemName,
                 'Цена': item.price,
                 ...commonSpecs
             };
@@ -84,15 +93,40 @@ export class Parser {
                         finalItem[specName] = itemSpec
                     }
                 }
-                if(colors.includes(itemSpec)) {
+                if (colors.includes(itemSpec)) {
                     finalItem['Цвет'] = itemSpec;
                 }
             }
-            items.push(finalItem);
+            let articles = this.getArticles(finalItem, url);
+
+            items.push({
+                ...articles,
+                ...finalItem
+            });
         }
 
         return items;
     }
+
+
+    private getArticles(item: object, url: string) {
+        let split = url.split('/');
+        let baseArticle = split[split.length - 2];
+
+        let string = Object.values(item).join('');
+
+        let hash = 0;
+        for (let i = 0; i < string.length; i++) {
+            hash = Math.imul(31, hash) + string.charCodeAt(i) | 0;
+        }
+        let hashString = Math.abs(hash).toString();
+
+        return {
+            'Уникальный артикул': `${baseArticle}:${hashString}`,
+            'Базовый артикул': baseArticle
+        }
+    }
+
 
     //БЕЛЫЕ ОБЩИЕ
     private getCommonSpecs(html: string) {

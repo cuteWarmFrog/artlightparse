@@ -1,4 +1,4 @@
-export class ItemsUnifier {
+export class ItemUnifier {
 
 
     unifyItems(items: Array<any>): Array<any> {
