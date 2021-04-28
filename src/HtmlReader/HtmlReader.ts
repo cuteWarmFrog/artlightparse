@@ -29,15 +29,27 @@ export class HtmlReader {
 
       try {
          while(true) {
-            await this.findShowMore();
+            await new Promise((resolve, reject) =>
+                   setTimeout(async ()=>{
+                      try {
+                         await this.findShowMore()
+                         resolve("");
+                      } catch(err){
+                         reject(err)
+                      }
+                   }, 1500)
+            )
 
-            for(let i = 0; i < 20000; i++) {
-               console.clear();
-               console.log(`${i} ⊃｡•́‿•̀｡)⊃ я жму "показать больше"`);
-            }
+         //    await this.findShowMore();
+         //
+         //    for(let i = 0; i < 20000; i++) {
+         //       console.clear();
+         //       console.log(`${i} ⊃｡•́‿•̀｡)⊃ я жму "показать больше"`);
+         //    }
          }
 
       } catch (err) {
+         console.log("я поймав")
       }
       const element: WebElement = await this.driver.findElement(by.css('body'));
       return await element.getAttribute("innerHTML");
