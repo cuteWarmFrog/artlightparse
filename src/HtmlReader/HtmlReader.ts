@@ -39,13 +39,6 @@ export class HtmlReader {
                       }
                    }, 1300)
             )
-
-         //    await this.findShowMore();
-         //
-         //    for(let i = 0; i < 20000; i++) {
-         //       console.clear();
-         //       console.log(`${i} ⊃｡•́‿•̀｡)⊃ я жму "показать больше"`);
-         //    }
          }
 
       } catch (err) {
