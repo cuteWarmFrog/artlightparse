@@ -4,7 +4,7 @@ const fs = require('fs')
 
 export class Downloader {
 
-   async download(url: string) {
+   async download(url: string, baseName: string) {
 
       const response = await Axios({
          method: 'GET',
@@ -12,15 +12,21 @@ export class Downloader {
          responseType: 'stream'
       })
 
-      response.data.pipe(fs.createWriteStream(this.generatePath(url)));
+      response.data.pipe(fs.createWriteStream(this.generatePath(url, baseName)));
    }
 
-   pickAName(url: string): string {
+   pickAName(url: string, baseName: string): string {
       let parts = url.split('/');
-      return parts[parts.length - 1];
+      let name =  parts[parts.length - 1];
+      if(name.includes('size')) {
+         name = baseName + '-' + 'size' + '-' + (name.replace(baseName, '').replace("size", ''));
+         return name.replace(" ", '');
+      }
+
+      return (baseName + '-' + (name.replace(baseName, ''))).replace(" ", '');
    }
 
-   generatePath(url: string): any {
-      return Path.resolve(__dirname, '../../content/photos', this.pickAName(url));
+   generatePath(url: string, baseName: string): any {
+      return Path.resolve(__dirname, '../../content/photos', this.pickAName(url, baseName));
    }
 }
