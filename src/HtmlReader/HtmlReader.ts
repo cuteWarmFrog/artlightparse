@@ -37,7 +37,7 @@ export class HtmlReader {
                       } catch(err){
                          reject(err)
                       }
-                   }, 1500)
+                   }, 1300)
             )
 
          //    await this.findShowMore();
