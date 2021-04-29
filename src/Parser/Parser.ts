@@ -20,6 +20,7 @@ export class Parser {
     }
 
     getResourcesUrlsForDownload(html: string): string[] {
+
         const pictures = this.getUrlsForDownload(html, this.pictureRegex);
         const archives = this.getUrlsForDownload(html, this.archiveRegex);
         const pdfs = this.getUrlsForDownload(html, this.pdfRegex);
@@ -44,33 +45,29 @@ export class Parser {
     getDistinctItems(html: string, url: string) {
         let distinctItems: any = [];
 
-        const Specs: string[] = [];
-        const prices: number[] = [];
+        const specs: string[] = [];
+        const prices: string[] = [];
         const $ = cheerio.load(html);
         $('.fined-items .name-item').each((i: number, element: any) => {
-            Specs.push(element.children[0].data);
+            specs.push(element.children[0].data);
         })
 
-        $('.fined-items .current-price span').each((i: number, element: any) => {
-            prices.push(element.children[0].data);
-        })
-        const delta = Specs.length - prices.length;
-        Specs.splice(0, delta);
+        $('.wrap-price').each((i: number, element: any) => {
+            try {
+                prices.push(element.children[1].children[1].children[0].data.trim());
+            } catch (err) {
+                prices.push(element.children[1].children[0].data.trim());
+            }
 
-        for (let i = 0; i < Specs.length; i++) {
-            distinctItems.push({
-                specs: Specs[i],
-                price: prices[i]
-            })
+        })
+        for (let i = 0; i < specs.length; i++) {
+            if(prices[i] !== 'Цена по запросу') {
+                distinctItems.push({
+                    specs: specs[i],
+                    price: prices[i]
+                })
+            }
         }
-
-        // distinctItems = Array.from(new Set(distinctItems.map((item: any) => item.specs)))
-        //     .map((specs: any) => {
-        //         return {
-        //             specs: specs,
-        //             price: distinctItems.find((item: any) => item.specs === specs).price
-        //         }
-        //     })
 
         let commonSpecs = this.getCommonSpecs(html);
         let specsPool = this.getSpecificSpecsPool(html);
@@ -97,7 +94,13 @@ export class Parser {
                     finalItem['Цвет'] = itemSpec;
                 }
             }
-            let articles = this.getArticles(finalItem, url);
+
+            let baseArticle: any;
+            $('h1').each((i: number, element: any) => {
+                baseArticle = element.children[0].data;
+            })
+
+            let articles = this.getArticles(finalItem, baseArticle);
 
             items.push({
                 ...articles,
@@ -109,9 +112,8 @@ export class Parser {
     }
 
 
-    private getArticles(item: object, url: string) {
-        let split = url.split('/');
-        let baseArticle = split[split.length - 2];
+
+    private getArticles(item: object, baseArticle: string) {
 
         let string = Object.values(item).join('');
 
@@ -122,8 +124,8 @@ export class Parser {
         let hashString = Math.abs(hash).toString();
 
         return {
-            'Уникальный артикул': `${baseArticle}:${hashString}`,
-            'Базовый артикул': baseArticle
+            'ID': `${baseArticle}:${hashString}`,
+            'Base article': baseArticle
         }
     }
 
@@ -169,7 +171,6 @@ export class Parser {
                         key = groupEl.children[i].children[0].data;
                     }
 
-                    //ПОСЛЕДНИЙ РАЗ Я ЮЗАЮ CHEERIO, ДА И САЙТЫ ПАРШУ ТОЖЕ ПОСЛЕДНИЙ РАЗ. КОД НИЖЕ ПРОСТО ПИЗДА, А ПО-ДРУГОМУ НИКАК)))
                     if (groupEl.children[i].name === 'label') {
                         for (let j = 0; j < groupEl.children[i].children.length; j++) {
                             if (groupEl.children[i].children[j].name === 'p') {
