@@ -24,10 +24,10 @@ const urlsToAvoid = [
 
 (async function MainWrapper() {
     let beginTime = Date.now();
-    const htmlReader = new HtmlReader();
-    const parser = new Parser();
-    const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_r_315/';
-    const itemUrlWithoutMore = 'https://artlight.ru/catalog/trekovye_svetilniki/art_focus66/';
+    // const htmlReader = new HtmlReader();
+    // const parser = new Parser();
+    // const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_r_315/';
+    // const itemUrlWithoutMore = 'https://artlight.ru/catalog/trekovye_svetilniki/art_focus66/';
 
     // const itemHtml = await htmlReader.getItemHtmlFromBrowser(itemUrlWithMore, sliderCardSelector);
     // const distinctItems =  parser.getDistinctItems(itemHtml);
@@ -55,24 +55,29 @@ async function makeSomeMagic(beginTime: number) {
     let i = 1;
     for (let itemUrl of allItemsUrls) {
 
-        console.clear();
-        console.log(`Processing: ${i++}|${allItemsUrls.length}`);
-        console.log(`Already found ${specificItems.length} items. Trying to find more...`)
+        try {
+            console.clear();
+            console.log(`Processing: ${i++}|${allItemsUrls.length}`);
+            console.log(`Already found ${specificItems.length} items. Trying to find more...`)
 
-        let itemHtml = await htmlReader.getItemHtmlFromBrowser(itemUrl, sliderCardSelector);
-        let distinctItems = parser.getDistinctItems(itemHtml, itemUrl);
-        specificItems.push(...distinctItems);
+            let itemHtml = await htmlReader.getItemHtmlFromBrowser(itemUrl, sliderCardSelector);
+            let distinctItems = parser.getDistinctItems(itemHtml, itemUrl);
 
+            specificItems.push(...distinctItems);
 
-        let urlsForDownloading = parser.getResourcesUrlsForDownload(itemHtml);
+            let urlsForDownloading = parser.getResourcesUrlsForDownload(itemHtml);
 
-        if (distinctItems.length > 0) {
-            for (let url of urlsForDownloading) {
-                await downloader.download(url, distinctItems[0]['Base article']);
+            if (distinctItems.length > 0) {
+                for (let url of urlsForDownloading) {
+                    await downloader.download(url, distinctItems[0]['Base article']);
+                }
             }
+        } catch (err) {
+            console.log("Ыыыыы")
         }
 
-        // if (i == 2) {
+
+        // if (i == 3) {
         //     console.log('пока хватит');
         //     break;
         // }
@@ -101,9 +106,7 @@ async function getAllPageUrls(categoriesUrls: string[], htmlReader: HtmlReader, 
     for (let categoryUrl of categoriesUrls) {
 
         console.clear();
-        console.log(`
-      *getting page urls*
-      Processing ${i++} category url.`);
+        console.log(`getting page urls \nProcessing ${i++}/${categoriesUrls.length} category url.`);
 
         if (!urlsToAvoid.includes(categoryUrl)) {
             const categoryHtml = await htmlReader.getHtmlFromBrowser(categoryUrl, lastItemCardSelector);
@@ -121,9 +124,7 @@ async function getAllItemsUrls(allPageUrls: string[], htmlReader: HtmlReader, pa
     for (let pageUrl of allPageUrls) {
 
         console.clear();
-        console.log(`
-      *getting item urls*
-      Processing ${i++} page url.`);
+        console.log(`Getting item urls \nProcessing ${i++}/${allPageUrls.length} page url.`);
 
         const pageHtml = await htmlReader.getHtmlFromBrowser(pageUrl, lastItemCardSelector);
         const itemsUrls = parser.getUrlsFromHtmlWithSelector(pageHtml, itemLinkSelector);
