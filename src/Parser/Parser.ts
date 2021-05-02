@@ -61,7 +61,7 @@ export class Parser {
 
         })
         for (let i = 0; i < specs.length; i++) {
-            if(prices[i] !== 'Цена по запросу') {
+            if (prices[i] !== 'Цена по запросу') {
                 distinctItems.push({
                     specs: specs[i],
                     price: prices[i]
@@ -97,7 +97,12 @@ export class Parser {
 
             let baseArticle: any;
             $('h1').each((i: number, element: any) => {
-                baseArticle = element.children[0].data;
+                try {
+                    baseArticle = element.children[0].data;
+                } catch (err) {
+                    baseArticle = specs[0].split('(')[0].trim();
+                }
+
             })
 
             let articles = this.getArticles(finalItem, baseArticle);
@@ -110,7 +115,6 @@ export class Parser {
 
         return items;
     }
-
 
 
     private getArticles(item: object, baseArticle: string) {
