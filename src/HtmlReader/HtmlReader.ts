@@ -28,7 +28,11 @@ export class HtmlReader {
       await this.driver.wait(until.elementLocated(by.css(elementSelectorToWait)), 45000);
 
       try {
+         let i = 0;
          while(true) {
+            if(i++ == 15) {
+               throw 'Omg please stop it';
+            }
             await new Promise((resolve, reject) =>
                    setTimeout(async ()=>{
                       try {
@@ -37,12 +41,12 @@ export class HtmlReader {
                       } catch(err){
                          reject(err)
                       }
-                   }, 1300)
+                   }, 2000)
             )
          }
 
       } catch (err) {
-         console.log("я поймав")
+         //так, простыми действиями можно обработать ошибку. Но зачем?
       }
       const element: WebElement = await this.driver.findElement(by.css('body'));
       return await element.getAttribute("innerHTML");
