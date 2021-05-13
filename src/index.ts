@@ -3,7 +3,7 @@ import {Downloader} from "./Downloader/Downloader";
 import {HtmlReader} from "./HtmlReader/HtmlReader";
 import {ItemUnifier} from "./ItemUnifier/ItemUnifier";
 import dateFormat = require("dateformat");
-import {log} from "util";
+const Path = require("path");
 
 const fs = require('fs');
 
@@ -24,6 +24,7 @@ const urlsToAvoid = [
 
 (async function MainWrapper() {
     let beginTime = Date.now();
+
     // const htmlReader = new HtmlReader();
     // const parser = new Parser();
     // const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_r_315/';
@@ -54,7 +55,6 @@ async function makeSomeMagic(beginTime: number) {
 
     let i = 1;
     for (let itemUrl of allItemsUrls) {
-
         try {
             console.clear();
             console.log(`Processing: ${i++}|${allItemsUrls.length}`);
@@ -72,22 +72,33 @@ async function makeSomeMagic(beginTime: number) {
                     await downloader.download(url, distinctItems[0]['Base article']);
                 }
             }
+
+
         } catch (err) {
             console.log("Ыыыыы")
         }
 
 
-        // if (i == 3) {
-        //     console.log('пока хватит');
-        //     break;
-        // }
+        if (i == 4) {
+            console.log('пока хватит');
+            break;
+        }
     }
 
 
     const itemsUnifier = new ItemUnifier();
     const unifiedItems = itemsUnifier.unifyItems(specificItems);
 
-    fs.writeFileSync(`content/jsons/items_${getDateFormatted()}.json`, JSON.stringify(unifiedItems));
+    // fs.writeFileSync(`${__dirname}/content/jsons/items_${getDateFormatted()}.json`, JSON.stringify(unifiedItems));
+    // fs.writeFileSync(generatePath(), JSON.stringify(unifiedItems));
+    const myPath = Path.resolve(__dirname, '..', 'content', 'jsons', getDateFormatted());
+    await fs.writeFile(myPath, JSON.stringify(unifiedItems), (err: any) => {
+        if(err != null) {
+            console.log("Json успешно создан.")
+        } else {
+            console.log(err);
+        }
+    });
 
     let diff = Date.now() - beginTime;
     let minutes = Math.round(diff / 60000);
@@ -97,7 +108,11 @@ async function makeSomeMagic(beginTime: number) {
 
 function getDateFormatted(): string {
     let now = new Date();
-    return dateFormat(now, "mmmm dS, h:MM:ss TT");
+    return dateFormat(now, "mmmm_dS_hh_MM_ss_TT")+".json";
+}
+
+function generatePath(): any {
+    return Path.resolve(__dirname, 'content/jsons', `items_${getDateFormatted()}.json`);
 }
 
 async function getAllPageUrls(categoriesUrls: string[], htmlReader: HtmlReader, parser: Parser): Promise<string[]> {
