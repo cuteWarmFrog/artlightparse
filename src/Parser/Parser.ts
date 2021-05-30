@@ -186,6 +186,22 @@ export class Parser {
             }
             commonSpecs[key] = value;
         });
+        console.log('hueta');
+        for(let spec in commonSpecs) {
+            if(commonSpecs[spec].includes("Ø")) {
+                let parts = commonSpecs["Размеры, мм"].split(" ");
+                for(let part of parts) {
+                    if(part[0] == 'Ø') {
+                        commonSpecs["Диаметр"] = part.slice(1);
+                    }
+                    if(part[0] == 'H') {
+                        commonSpecs["Высота"] = part.slice(1);
+                    }
+                }
+
+            }
+        }
+
         return commonSpecs;
     }
 
