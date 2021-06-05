@@ -1,5 +1,5 @@
 const fs = require('fs');
-import {getDateFormatted} from './index'
+import dateFormat = require("dateformat");
 
 let formsOfWordItem = ['предмет', 'предмета', 'предметов'];
 
@@ -33,7 +33,7 @@ fs.writeFileSync(`content/difference/itemsToDelete_${currentFormattedDate}.json`
 fs.writeFileSync(`content/difference/itemsToAdd_${currentFormattedDate}.json`, JSON.stringify(itemsToAdd));
 
 console.log(`Из каталога удалили ${itemsToDelete.length} ${getWordForm(itemsToDelete.length, formsOfWordItem)}.`);
-console.log(`В каталог добавили ${itemsToDelete.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
+console.log(`В каталог добавили ${itemsToAdd.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
 
 function getWordForm(n: number, text_forms: Array<string>) {
     n = Math.abs(n) % 100;
@@ -42,4 +42,9 @@ function getWordForm(n: number, text_forms: Array<string>) {
     if (n1 > 1 && n1 < 5) { return text_forms[1]; }
     if (n1 == 1) { return text_forms[0]; }
     return text_forms[2];
+}
+
+function getDateFormatted(): string {
+    let now = new Date();
+    return dateFormat(now, "mmmm_dS_h_MM_ss_TT");
 }
