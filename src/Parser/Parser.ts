@@ -54,8 +54,7 @@ export class Parser {
             specs.push(element.children[3].children[3].children[0].data.trim());
 
             if(element.children[5].children[1].attribs["class"] === "wrap-price") {
-                console.log('Обычная цена');
-
+[]
                 try {
                     prices.push({
                         oldPrice: element.children[5].children[1].children[1].children[1].children[0].data.trim(),
@@ -186,7 +185,7 @@ export class Parser {
             }
             commonSpecs[key] = value;
         });
-        console.log('hueta');
+
         for(let spec in commonSpecs) {
             if(commonSpecs[spec].includes("Ø")) {
                 let parts = commonSpecs["Размеры, мм"].split(" ");
