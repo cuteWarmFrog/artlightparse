@@ -79,14 +79,6 @@ export class Parser {
             }
         })
 
-        // $('.fined-items .name-item').each((i: number, element: any) => {
-        //     specs.push(element.children[0].data);
-        // })
-        //
-        // $('.wrap-price').each((i: number, element: any) => {
-        //
-        //
-        // })
         for (let i = 0; i < specs.length; i++) {
             if (prices[i].oldPrice !== 'Цена по запросу') {
                 distinctItems.push({

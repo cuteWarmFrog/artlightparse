@@ -34,6 +34,7 @@ fs.writeFileSync(`content/difference/itemsToAdd_${currentFormattedDate}.json`, J
 
 console.log(`Из каталога удалили ${itemsToDelete.length} ${getWordForm(itemsToDelete.length, formsOfWordItem)}.`);
 console.log(`В каталог добавили ${itemsToAdd.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
+console.log('Проверь папку difference :)');
 
 function getWordForm(n: number, text_forms: Array<string>) {
     n = Math.abs(n) % 100;

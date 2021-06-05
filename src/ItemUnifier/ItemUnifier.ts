@@ -1,6 +1,5 @@
 export class ItemUnifier {
 
-
     unifyItems(items: Array<any>): Array<any> {
 
         let allSpecs: any = [];
