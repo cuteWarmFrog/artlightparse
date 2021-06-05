@@ -3,7 +3,6 @@ import {Downloader} from "./Downloader/Downloader";
 import {HtmlReader} from "./HtmlReader/HtmlReader";
 import {ItemUnifier} from "./ItemUnifier/ItemUnifier";
 import dateFormat = require("dateformat");
-import {log} from "util";
 
 const fs = require('fs');
 
@@ -36,6 +35,10 @@ const urlsToAvoid = [
     await makeSomeMagic(beginTime);
 
 })();
+
+//todo сделать возможность начать с какого-то номера item.
+
+//todo сделать возожность объединять json-ы
 
 async function makeSomeMagic(beginTime: number) {
     const downloader = new Downloader();

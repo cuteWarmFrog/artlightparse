@@ -30,7 +30,7 @@ export class HtmlReader {
       try {
          let i = 0;
          while(true) {
-            if(i++ == 15) {
+            if(i++ == 17) {
                throw 'Omg please stop it';
             }
             await new Promise((resolve, reject) =>

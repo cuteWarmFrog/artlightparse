@@ -46,22 +46,41 @@ export class Parser {
         let distinctItems: any = [];
 
         const specs: string[] = [];
-        const prices: string[] = [];
+        const prices: any = [];
         const $ = cheerio.load(html);
-        $('.fined-items .name-item').each((i: number, element: any) => {
-            specs.push(element.children[0].data);
-        })
 
-        $('.wrap-price').each((i: number, element: any) => {
-            try {
-                prices.push(element.children[1].children[1].children[0].data.trim());
-            } catch (err) {
-                prices.push(element.children[1].children[0].data.trim());
+        $('.fined-items').each((i: number, element: any) => {
+
+            specs.push(element.children[3].children[3].children[0].data.trim());
+
+            if(element.children[5].children[1].attribs["class"] === "wrap-price") {
+[]
+                try {
+                    prices.push({
+                        oldPrice: element.children[5].children[1].children[1].children[1].children[0].data.trim(),
+                        newPrice: element.children[5].children[1].children[1].children[1].children[0].data.trim()
+                    });
+                } catch (err) {
+                    prices.push({
+                        oldPrice: element.children[5].children[1].children[1].children[0].data.trim(),
+                        newPrice: element.children[5].children[1].children[1].children[0].data.trim()
+                    });
+                }
             }
 
+            if(element.children[5].children[1].attribs["class"] === "wrap-double-price") {
+
+                let newPrice = element.children[5].children[1].children[1].children[1].children[0].data;
+                let oldPrice = element.children[5].children[1].children[3].children[1].children[0].data;
+                prices.push({
+                    newPrice,
+                    oldPrice
+                })
+            }
         })
+
         for (let i = 0; i < specs.length; i++) {
-            if (prices[i] !== 'Цена по запросу') {
+            if (prices[i].oldPrice !== 'Цена по запросу') {
                 distinctItems.push({
                     specs: specs[i],
                     price: prices[i]
@@ -81,7 +100,8 @@ export class Parser {
 
             let finalItem = {
                 'Наименование': itemName,
-                'Цена': item.price,
+                'Старая цена': item.price.oldPrice,
+                'Новая цена': item.price.newPrice,
                 ...commonSpecs
             };
             for (let itemSpec of itemSpecs) {
@@ -157,6 +177,22 @@ export class Parser {
             }
             commonSpecs[key] = value;
         });
+
+        for(let spec in commonSpecs) {
+            if(commonSpecs[spec].includes("Ø")) {
+                let parts = commonSpecs["Размеры, мм"].split(" ");
+                for(let part of parts) {
+                    if(part[0] == 'Ø') {
+                        commonSpecs["Диаметр"] = part.slice(1);
+                    }
+                    if(part[0] == 'H') {
+                        commonSpecs["Высота"] = part.slice(1);
+                    }
+                }
+
+            }
+        }
+
         return commonSpecs;
     }
 
