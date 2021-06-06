@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 
-const colors = ['Grey', 'Black', 'White', 'Blue', 'Yellow', '']
+const colors = ['Grey', 'Black', 'White', 'Blue', 'Yellow', '', 'Matt grey', 'Silver', 'Matt black']
 
 export class Parser {
     readonly pictureRegex = /\/upload\/iblock.*jpeg/gm;
