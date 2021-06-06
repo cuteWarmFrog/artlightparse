@@ -16,7 +16,7 @@ export class Downloader {
    }
 
    pickAName(url: string, baseName: string): string {
-      let parts = url.split('/');
+      let parts = decodeURI(url).split('/');
       let name =  parts[parts.length - 1];
       if(name.includes('size')) {
          name = baseName + '-' + 'size' + '-' + (name.replace(baseName, '').replace("size", ''));
