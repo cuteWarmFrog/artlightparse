@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 
-const colors = ['Grey', 'Black', 'White', 'Blue', 'Yellow', '', 'Matt grey', 'Silver', 'Matt black']
+const colorsPool = ['Grey', 'Black', 'White', 'Blue', 'Yellow', 'Matt grey', 'Silver', 'Matt black'];
 
 export class Parser {
     readonly pictureRegex = /\/upload\/iblock.*jpeg/gm;
@@ -53,8 +53,7 @@ export class Parser {
 
             specs.push(element.children[3].children[3].children[0].data.trim());
 
-            if(element.children[5].children[1].attribs["class"] === "wrap-price") {
-[]
+            if (element.children[5].children[1].attribs["class"] === "wrap-price") {
                 try {
                     prices.push({
                         oldPrice: element.children[5].children[1].children[1].children[1].children[0].data.trim(),
@@ -68,7 +67,7 @@ export class Parser {
                 }
             }
 
-            if(element.children[5].children[1].attribs["class"] === "wrap-double-price") {
+            if (element.children[5].children[1].attribs["class"] === "wrap-double-price") {
 
                 let newPrice = element.children[5].children[1].children[1].children[1].children[0].data;
                 let oldPrice = element.children[5].children[1].children[3].children[1].children[0].data;
@@ -110,7 +109,7 @@ export class Parser {
                         finalItem[specName] = itemSpec
                     }
                 }
-                if (colors.includes(itemSpec)) {
+                if (colorsPool.includes(itemSpec)) {
                     finalItem['Цвет'] = itemSpec;
                 }
             }
@@ -178,14 +177,14 @@ export class Parser {
             commonSpecs[key] = value;
         });
 
-        for(let spec in commonSpecs) {
-            if(commonSpecs[spec].includes("Ø")) {
+        for (let spec in commonSpecs) {
+            if (commonSpecs[spec].includes("Ø")) {
                 let parts = commonSpecs["Размеры, мм"].split(" ");
-                for(let part of parts) {
-                    if(part[0] == 'Ø') {
+                for (let part of parts) {
+                    if (part[0] == 'Ø') {
                         commonSpecs["Диаметр"] = part.slice(1);
                     }
-                    if(part[0] == 'H') {
+                    if (part[0] == 'H') {
                         commonSpecs["Высота"] = part.slice(1);
                     }
                 }

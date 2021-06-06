@@ -80,10 +80,10 @@ async function makeSomeMagic(beginTime: number) {
         }
 
 
-        // if (i == 3) {
-        //     console.log('пока хватит');
-        //     break;
-        // }
+        if (i == 20) {
+            console.log('пока хватит');
+            break;
+        }
     }
 
 
@@ -100,7 +100,7 @@ async function makeSomeMagic(beginTime: number) {
 
 function getDateFormatted(): string {
     let now = new Date();
-    return dateFormat(now, "mmmm dS, h:MM:ss TT");
+    return dateFormat(now, "mmmm_dS_h_MM_ss_TT");
 }
 
 async function getAllPageUrls(categoriesUrls: string[], htmlReader: HtmlReader, parser: Parser): Promise<string[]> {
