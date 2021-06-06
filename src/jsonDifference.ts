@@ -1,3 +1,5 @@
+//needed to be run from /dist
+
 const fs = require('fs');
 import dateFormat = require("dateformat");
 
@@ -6,8 +8,8 @@ let formsOfWordItem = ['предмет', 'предмета', 'предметов
 const oldJsonName = process.argv[2];
 const newJsonName = process.argv[3];
 
-const oldItems = JSON.parse(fs.readFileSync(`content/jsons/${oldJsonName}`, {encoding: "utf8"}));
-const newItems = JSON.parse(fs.readFileSync(`content/jsons/${newJsonName}`, {encoding: "utf8"}));
+const oldItems = JSON.parse(fs.readFileSync(`../content/jsons/${oldJsonName}`, {encoding: "utf8"}));
+const newItems = JSON.parse(fs.readFileSync(`../content/jsons/${newJsonName}`, {encoding: "utf8"}));
 
 
 let itemsToDelete = oldItems.filter((oldItem: any) => {
@@ -29,8 +31,8 @@ let itemsToAdd = newItems.filter((newItem: any) => {
 })
 
 let currentFormattedDate = getDateFormatted();
-fs.writeFileSync(`content/difference/itemsToDelete_${currentFormattedDate}.json`, JSON.stringify(itemsToDelete));
-fs.writeFileSync(`content/difference/itemsToAdd_${currentFormattedDate}.json`, JSON.stringify(itemsToAdd));
+fs.writeFileSync(`../content/difference/itemsToDelete_${currentFormattedDate}.json`, JSON.stringify(itemsToDelete));
+fs.writeFileSync(`../content/difference/itemsToAdd_${currentFormattedDate}.json`, JSON.stringify(itemsToAdd));
 
 console.log(`Из каталога удалили ${itemsToDelete.length} ${getWordForm(itemsToDelete.length, formsOfWordItem)}.`);
 console.log(`В каталог добавили ${itemsToAdd.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
