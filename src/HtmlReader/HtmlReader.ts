@@ -17,10 +17,14 @@ export class HtmlReader {
    }
 
    async getHtmlFromBrowser(url: string, elementSelectorToWait: string): Promise<string> {
-      await this.driver.get(url);
-      await this.driver.wait(until.elementLocated(by.css(elementSelectorToWait)), 45000);
-      const element: WebElement = await this.driver.findElement(by.css('body'));
-      return await element.getAttribute("innerHTML");
+      try {
+         await this.driver.get(url);
+         await this.driver.wait(until.elementLocated(by.css(elementSelectorToWait)), 45000);
+         const element: WebElement = await this.driver.findElement(by.css('body'));
+         return await element.getAttribute("innerHTML");
+      } catch (err) {
+         return "nothing";
+      }
    }
 
    async getItemHtmlFromBrowser(url: string, elementSelectorToWait: string): Promise<string> {
