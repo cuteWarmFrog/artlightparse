@@ -36,10 +36,6 @@ const urlsToAvoid = [
 
 })();
 
-//todo сделать возможность начать с какого-то номера item.
-
-//todo сделать возожность объединять json-ы
-
 async function makeSomeMagic(beginTime: number) {
     const downloader = new Downloader();
     const htmlReader = new HtmlReader();
@@ -76,14 +72,14 @@ async function makeSomeMagic(beginTime: number) {
                 }
             }
         } catch (err) {
-            console.log("Ыыыыы")
+            console.log('попався');
         }
 
 
-        if (i == 20) {
-            console.log('пока хватит');
-            break;
-        }
+        // if (i == 20) {
+        //     console.log('пока хватит');
+        //     break;
+        // }
     }
 
 
@@ -95,7 +91,9 @@ async function makeSomeMagic(beginTime: number) {
     let diff = Date.now() - beginTime;
     let minutes = Math.round(diff / 60000);
     let seconds = Math.round((diff % 60000) / 1000);
+    console.clear();
     console.log(`Working time: ${minutes} minutes and ${seconds} seconds.`);
+    console.log(`Found ${unifiedItems.length} items.`)
 }
 
 function getDateFormatted(): string {
