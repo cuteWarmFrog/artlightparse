@@ -3,6 +3,7 @@ import {Downloader} from "./Downloader/Downloader";
 import {HtmlReader} from "./HtmlReader/HtmlReader";
 import {ItemUnifier} from "./ItemUnifier/ItemUnifier";
 import dateFormat = require("dateformat");
+const JSONToCSV = require('json2csv').parse;
 
 const fs = require('fs');
 
@@ -32,6 +33,8 @@ const urlsToAvoid = [
     // const distinctItems =  parser.getDistinctItems(itemHtml);
 
     // console.log(distinctItems);
+    const items = JSON.parse(fs.readFileSync('content/jsons/items_June_6th_11_34_17_AM.json', {encoding: 'utf8'}));
+    // saveCSV(items);
     await makeSomeMagic(beginTime);
 
 })();
@@ -86,7 +89,7 @@ async function makeSomeMagic(beginTime: number) {
     const itemsUnifier = new ItemUnifier();
     const unifiedItems = itemsUnifier.unifyItems(specificItems);
 
-    fs.writeFileSync(`content/jsons/items_${getDateFormatted()}.json`, JSON.stringify(unifiedItems));
+    saveResults(unifiedItems);
 
     let diff = Date.now() - beginTime;
     let minutes = Math.round(diff / 60000);
@@ -94,6 +97,20 @@ async function makeSomeMagic(beginTime: number) {
     console.clear();
     console.log(`Working time: ${minutes} minutes and ${seconds} seconds.`);
     console.log(`Found ${unifiedItems.length} items.`)
+}
+
+function saveResults(result: Array<object>) {
+    saveJSON(result);
+    saveCSV(result);
+}
+
+function saveJSON(result: Array<object>) {
+    fs.writeFileSync(`content/jsons/items_${getDateFormatted()}.json`, JSON.stringify(result));
+}
+
+function saveCSV(result: Array<object>): void {
+    const csv = JSONToCSV(result, {fields: Object.keys(result[0])});
+    fs.writeFileSync(`content/csvs/items_${getDateFormatted()}.csv`, csv);
 }
 
 function getDateFormatted(): string {
