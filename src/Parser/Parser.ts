@@ -1,6 +1,8 @@
 const cheerio = require('cheerio');
 const fs = require('fs');
-const colorsPool = ['Grey', 'Black', 'White', 'Blue', 'Yellow', 'Matt grey', 'Silver', 'Matt black'];
+const colorsPool = ['Grey', 'Black', 'White', 'Blue', 'Yellow',
+    'Matt grey', 'Silver', 'Matt black', "Латунь", "Gold",
+    'RAL1036', 'RAL1036 (ORO PERLATO)', 'Лакированная латунь' ];
 
 export class Parser {
     readonly pictureRegex = /\/upload\/iblock.*jpeg/gm;
