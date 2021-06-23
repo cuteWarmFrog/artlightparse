@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-
+const fs = require('fs');
 const colorsPool = ['Grey', 'Black', 'White', 'Blue', 'Yellow', 'Matt grey', 'Silver', 'Matt black'];
 
 export class Parser {
@@ -93,9 +93,10 @@ export class Parser {
         const items: any = [];
 
         for (let item of distinctItems) {
-            let parts = item.specs.trim().split('(')
+            let str = item.specs.trim();
+            let parts = [str.slice(0, str.indexOf('(')), str.slice(str.indexOf('(') + 1, -1)];
             let itemName = parts[0]
-            let itemSpecs = parts[1].split(',').map((el: any) => el.trim().replace(')', ''));
+            let itemSpecs = parts[1].split(',').map((el: any) => el.trim());
 
             let finalItem = {
                 'Наименование': itemName,
@@ -131,18 +132,22 @@ export class Parser {
                 ...finalItem
             });
         }
-
+        // fs.writeFileSync('fuckMyBitch.json', JSON.stringify(items));
         return items;
     }
 
 
     private getArticles(item: object, baseArticle: string) {
 
-        let string = Object.values(item).join('');
-
+        let copy = JSON.parse(JSON.stringify(item));
+        delete copy['Старая цена'];
+        delete copy['Новая цена'];
+        delete copy['Наименование'];
+        delete copy['Группы'];
+        let allValuesString = Object.values(copy).join('');
         let hash = 0;
-        for (let i = 0; i < string.length; i++) {
-            hash = Math.imul(31, hash) + string.charCodeAt(i) | 0;
+        for (let i = 0; i < allValuesString.length; i++) {
+            hash = Math.imul(31, hash) + allValuesString.charCodeAt(i) | 0;
         }
         let hashString = Math.abs(hash).toString();
 
