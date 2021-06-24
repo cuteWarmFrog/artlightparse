@@ -22,24 +22,15 @@ const urlsToAvoid = [
     'https://artlight.ru/catalog/gipsovye_svetilniki/',
     'https://artlight.ru/catalog/kompleksnye_sistemy_bezopasnosti/'];
 
+
+let beginTime: number;
+
 (async function MainWrapper() {
-    let beginTime = Date.now();
-    // const htmlReader = new HtmlReader();
-    // const parser = new Parser();
-    // const itemUrlWithMore = 'https://artlight.ru/catalog/vstraivaemye_svetilniki/art_r_315/';
-    // const itemUrlWithoutMore = 'https://artlight.ru/catalog/trekovye_svetilniki/art_focus66/';
-
-    // const itemHtml = await htmlReader.getItemHtmlFromBrowser(itemUrlWithMore, sliderCardSelector);
-    // const distinctItems =  parser.getDistinctItems(itemHtml);
-
-    // console.log(distinctItems);
-    const items = JSON.parse(fs.readFileSync('content/jsons/items_June_6th_11_34_17_AM.json', {encoding: 'utf8'}));
-    // saveCSV(items);
-    await makeSomeMagic(beginTime);
-
+    beginTime = Date.now();
+    await makeSomeMagic();
 })();
 
-async function makeSomeMagic(beginTime: number) {
+async function makeSomeMagic() {
     const downloader = new Downloader();
     const htmlReader = new HtmlReader();
     const parser = new Parser();
@@ -75,7 +66,7 @@ async function makeSomeMagic(beginTime: number) {
                 }
             }
         } catch (err) {
-            console.log('попався');
+            console.log(err);
         }
 
 

@@ -45,7 +45,7 @@ export class HtmlReader {
                       } catch(err){
                          reject(err)
                       }
-                   }, 2000)
+                   }, 2700)
             )
          }
 
