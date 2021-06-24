@@ -1,4 +1,6 @@
 //needed to be run from /dist
+import {ItemUnifier} from "./ItemUnifier/ItemUnifier";
+
 const JSONToCSV = require('json2csv').parse;
 const fs = require('fs');
 import dateFormat = require("dateformat");
@@ -30,6 +32,9 @@ let itemsToAdd = newItems.filter((newItem: any) => {
     return flag
 })
 
+const itemsUnifier = new ItemUnifier();
+itemsToDelete = itemsUnifier.makeUnique(itemsToDelete);
+itemsToAdd = itemsUnifier.makeUnique(itemsToAdd);
 let currentFormattedDate = getDateFormatted();
 
 if(itemsToDelete.length > 0) {

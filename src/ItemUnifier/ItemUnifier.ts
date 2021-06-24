@@ -16,7 +16,7 @@ export class ItemUnifier {
         return this.makeUnique(items);
     }
 
-    private makeUnique(items: Array<any>): Array<any> {
+    makeUnique(items: Array<any>): Array<any> {
         const IDs = this.getIDs(items);
         const uniqueIDs = Array.from(new Set(IDs));
 
@@ -26,7 +26,7 @@ export class ItemUnifier {
         }, [])
     }
 
-    private getIDs(json: Array<object>): Array<string> {
+    getIDs(json: Array<object>): Array<string> {
         const ids = json.reduce<Array<string>>((acc: Array<string>, el: any) => {
             const id = el['ID'];
             return acc.concat([id]);
