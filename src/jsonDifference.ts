@@ -1,5 +1,5 @@
 //needed to be run from /dist
-
+const JSONToCSV = require('json2csv').parse;
 const fs = require('fs');
 import dateFormat = require("dateformat");
 
@@ -31,12 +31,20 @@ let itemsToAdd = newItems.filter((newItem: any) => {
 })
 
 let currentFormattedDate = getDateFormatted();
-fs.writeFileSync(`../content/difference/itemsToDelete_${currentFormattedDate}.json`, JSON.stringify(itemsToDelete));
-fs.writeFileSync(`../content/difference/itemsToAdd_${currentFormattedDate}.json`, JSON.stringify(itemsToAdd));
 
-console.log(`Из каталога удалили ${itemsToDelete.length} ${getWordForm(itemsToDelete.length, formsOfWordItem)}.`);
-console.log(`В каталог добавили ${itemsToAdd.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
-console.log('Проверь папку difference :)');
+if(itemsToDelete.length > 0) {
+    fs.writeFileSync(`../content/difference/itemsToDelete_${currentFormattedDate}.csv`, makeCSV(itemsToDelete));
+    console.log(`Из каталога удалили ${itemsToDelete.length} ${getWordForm(itemsToDelete.length, formsOfWordItem)}.`);
+} else {
+    console.log(`Из каталога ничего не удалили.`);
+}
+
+if(itemsToAdd.length > 0) {
+    fs.writeFileSync(`../content/difference/itemsToAdd_${currentFormattedDate}.csv`, makeCSV(itemsToAdd));
+    console.log(`В каталог добавили ${itemsToAdd.length} ${getWordForm(itemsToAdd.length, formsOfWordItem)}.`);
+} else {
+    console.log('В каталог ничего не добавили.');
+}
 
 function getWordForm(n: number, text_forms: Array<string>) {
     n = Math.abs(n) % 100;
@@ -50,4 +58,8 @@ function getWordForm(n: number, text_forms: Array<string>) {
 function getDateFormatted(): string {
     let now = new Date();
     return dateFormat(now, "mmmm_dS_h_MM_ss_TT");
+}
+
+function makeCSV(result: Array<object>) {
+    return JSONToCSV(result, {fields: Object.keys(result[0])});
 }
